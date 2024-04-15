@@ -9,7 +9,7 @@ class TrieNode {
         this.suffix = suffix;
         this.phraseNum = phraseNum;
         //can store all hex possibilities 
-        children = new TrieNode[16];
+        children = new TrieNode[17];
     }
 
     public char getSuffix() {
@@ -42,8 +42,17 @@ class TrieNode {
         }
         
         //traverse to the next point in the trie
-        String indexChoice = prefix.substring(0,1);
-        index = Integer.valueOf(indexChoice);
+        char indexChoice = prefix.charAt(0);
+        //String indexChoice = prefix.substring(0,1);
+        index = (int)indexChoice;
+        
+        if(index > 57) {
+            //assume it's A-F
+            index = index - 55;
+        } else {
+            //assume it's 0-9
+            index = index - 48;
+        }
 
         if(prefix.length() == 1) {
             prefix = null;
