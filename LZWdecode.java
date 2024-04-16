@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -8,31 +9,56 @@ class LZWdecode {
         Scanner reader = new Scanner(System.in);
         OutputStreamWriter writer = new OutputStreamWriter(System.out);
         Trie trie = new Trie();
-        
+        //LinkedList<String> phrases = new LinkedList<String>();
         //to build up phrases of varying length
         //ArrayList list = new ArrayList<Char>();
         LinkedList<Character> list = new LinkedList<Character>();
+        HashMap<Integer, String> phrases = new HashMap<Integer, String>();
+
         String old = "";
         String neu = "";
         int counter = 0;
+        int phraseNum = 0;
+        for(int i = 0; i < 17; i++) {
+            if(i < 10) {
+                phrases.put(i, String.valueOf(i));
+                //phrases.add(String.valueOf(i));
+            } else {
+                char[] chars = new char[1];
+                chars[0] = (char)(i + 55);
+                phrases.put(i, new String(chars));
+                //phrases.add(new String(chars));
+            }
+            phraseNum++;
+        }
+      
         try {
             while(reader.hasNext()) {
                 String next = reader.next();
                 int phrase = Integer.parseInt(next);
                 //System.out.println();
                 //current phrase refers to the last phrase
-                if(phrase == trie.getNextPhraseNumber()) {
+                if(phrase == phraseNum) {
+                    //System.out.println(phrase);
+                    //if(true) return;
+                    
                     //System.out.println("here");
                     //append first letter of old to itself
-                    trie.insert(old, old.substring(0,1));
-                    writer.write(old);
+                    //trie.insert(old, old.substring(0,1));
+                    
                     old += old.substring(0,1);
+                    phrases.put(phraseNum, old);
+                    writer.write(old);
+                    //phrases.add(old);
+                    phraseNum++;
                     
                 } else {
                     
-                    TrieNode node = trie.findPhrase(phrase);
+                    //TrieNode node = trie.findPhrase(phrase);
+
+                    TrieNode node = null;
                     char[] chars;
-                    list.clear();
+                    //list.clear();
                     //System.out.println("PHRASE: " + phrase);
                     while(node != null) {
                         
@@ -41,14 +67,17 @@ class LZWdecode {
                         //System.out.println(node);
                         node = node.getParent();   
                     }
-                    chars = new char[list.size()];
+                    //chars = new char[list.size()];
                     //System.out.println("Current Run: " + counter);
                     //to reverse the order of the chars
                     //need to change this because it takes up so much time to compute
-                    for(int i = 0; i < chars.length; i++) {
-                        chars[i] = list.get((list.size() - 1) - i).charValue();
-                    }
-                    neu = new String(chars);
+                    //for(int i = 0; i < chars.length; i++) {
+                    //    chars[i] = list.get((list.size() - 1) - i).charValue();
+                    //}
+
+                    //neu = new String(chars);
+                    
+                    neu = phrases.get(phrase);
                     writer.write(neu);
                     //System.out.println("OLD: " + old);
                     //System.out.println("NEU: " + neu);
@@ -58,8 +87,12 @@ class LZWdecode {
                     //System.out.println("COUNTER: " + counter);
                     //System.out.println("CURR PHRASE " + trie.getNextPhraseNumber());
                     //System.out.println("INSERTING: " + old + neu);
-                    trie.insert(old, neu.substring(0,1));
-
+                    if(old != "") {
+                        //trie.insert(old, neu.substring(0,1));
+                        //phrases.add(old += neu.substring(0,1));
+                        phrases.put(phraseNum, old += neu.substring(0,1));
+                        phraseNum++;
+                    }
                     old = neu;
 
                 }
