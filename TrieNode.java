@@ -2,18 +2,47 @@ class TrieNode {
     private char suffix;
     private TrieNode[] children;
     private int phraseNum;
+    private TrieNode parent;
     //private int phraseNum;
     //must have multiple children
     //can use a hash table for 0-F hexadecimal good idea
-    public TrieNode(char suffix, int phraseNum) {
+    public TrieNode(char suffix, int phraseNum, TrieNode parent) {
         this.suffix = suffix;
         this.phraseNum = phraseNum;
+        this.parent = parent;
         //can store all hex possibilities 
         children = new TrieNode[17];
     }
 
     public char getSuffix() {
         return this.suffix;
+    }
+
+    public int getPhraseNum() {
+        return this.phraseNum;
+    }
+
+    public TrieNode getParent() {
+        return this.parent;
+    }
+
+
+    public TrieNode findPhrase(int phraseNum) {
+        if(getPhraseNum() == phraseNum) {
+            return this;
+        }
+
+        TrieNode node = null;
+
+        for(int i = 0; i < 16; i++) {
+            if(children[i] != null) {
+                node = children[i].findPhrase(phraseNum);
+            }
+            if(node != null) {
+                return node;
+            }
+        }
+        return node;
     }
 
     //returns phrase number of parent node
@@ -36,7 +65,7 @@ class TrieNode {
                 return -1;
             }
 
-            children[index] = new TrieNode(nextSuffix, phraseNum);
+            children[index] = new TrieNode(nextSuffix, phraseNum, this);
             
             return this.phraseNum;
         }
