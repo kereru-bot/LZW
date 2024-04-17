@@ -4,8 +4,8 @@ class LZWencode {
 
     public static void main(String[] args) {
         //final int bufferSize = 2048;
-        //log2(262143) = about 18 (so it's nice to work with)
-        final int maxPhrases = 262143;
+        //log2(65535) = about 16 (so it's nice to work with)
+        final int maxPhrases = 65535;
 
         InputStreamReader reader;
         reader = new InputStreamReader(System.in);
