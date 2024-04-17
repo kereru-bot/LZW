@@ -1,11 +1,13 @@
 class Trie {
     private int nextPhraseNum;
     private TrieNode[] children;
-    
-    public Trie() {
+    private int maxPhrases;
+
+    public Trie(int maxPhrases) {
         //for every hex character
         nextPhraseNum = 0;
         children = new TrieNode[17];
+        this.maxPhrases = maxPhrases;
         for(int i = 0; i < children.length; i++) {
             if(i < 10) {
                 //0-9
@@ -41,12 +43,22 @@ class Trie {
         } else {
             prefix = prefix.substring(1, prefix.length());
         }
+
+        int phrase;
         //remove the first char of the prefix and continue down the trie
-        int phrase = children[index].insert(prefix, suffix.charAt(0), nextPhraseNum);
-        if(phrase != -1) {
-            //only increment if given phrase is new phrase in the trie
-            nextPhraseNum++;
+        if(getNextPhraseNumber() == getMaxPhrases()) {
+            //trie is full
+            //dont insert
+            //return matching phrase
+            phrase = children[index].insert(prefix, suffix.charAt(0), -1);
+        } else {
+            phrase = children[index].insert(prefix, suffix.charAt(0), nextPhraseNum);
+            if(phrase != -1) {
+                //only increment if given phrase is new phrase in the trie
+                nextPhraseNum++;
+            }
         }
+        
         //stop incrementing phrase number like this, check if pattern is in trie or not
         return phrase;
     }
@@ -69,7 +81,7 @@ class Trie {
         }
         return node;
     }
-    
+  
 
     public TrieNode[] getChildren() {
         return children;
@@ -77,5 +89,9 @@ class Trie {
 
     public int getNextPhraseNumber() {
         return nextPhraseNum;
+    }
+
+    public int getMaxPhrases() {
+        return maxPhrases;
     }
 }

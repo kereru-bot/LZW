@@ -65,7 +65,9 @@ class TrieNode {
                 return -1;
             }
 
-            children[index] = new TrieNode(nextSuffix, phraseNum, this);
+            if(phraseNum != -1) {
+                children[index] = new TrieNode(nextSuffix, phraseNum, this);
+            }
             
             return this.phraseNum;
         }

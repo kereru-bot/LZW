@@ -4,13 +4,15 @@ class LZWencode {
 
     public static void main(String[] args) {
         //final int bufferSize = 2048;
+        //log2(262143) = about 18 (so it's nice to work with)
+        final int maxPhrases = 262143;
 
         InputStreamReader reader;
         reader = new InputStreamReader(System.in);
         //OutputStreamWriter writer;
         //writer = new OutputStreamWriter(System.out);
 
-        Trie trie = new Trie();
+        Trie trie = new Trie(maxPhrases);
         //char[] buf = new char[bufferSize];
         //int bytesRead = 0;
         String prefix = "";
